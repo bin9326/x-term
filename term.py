@@ -1,4 +1,5 @@
 import subprocess
+import os
 from prompt_toolkit import prompt
 from prompt_toolkit.shortcuts import PromptSession
 from prompt_toolkit.key_binding import KeyBindings
@@ -15,6 +16,7 @@ from rich.text import Text
 from rich.style import StyleType
 from rich.syntax import Syntax
 import emojis
+import spacy
 
 class FolderIcon:
     def __init__(self):
@@ -47,6 +49,7 @@ class Shell:
         self.init_rich()
         self.cwd = os.getcwd()
         self.folder_icon = FolderIcon()
+        self.nlp = spacy.load("en_core_web_sm")
 
     @staticmethod
     def init_colorama():
@@ -109,6 +112,21 @@ class Shell:
 
         return command
 
+    def perform_nlp_task(self, command):
+        doc = self.nlp(command)
+
+        # Tokenization
+        tokens = [token.text for token in doc]
+        self.console.print(f"[info]Tokens: {tokens}[/info]")
+
+        # Part-of-speech tagging
+        pos_tags = [(token.text, token.pos_) for token in doc]
+        self.console.print(f"[info]Part-of-Speech Tags: {pos_tags}[/info]")
+
+        # Named Entity Recognition
+        entities = [(entity.text, entity.label_) for entity in doc.ents]
+        self.console.print(f"[info]Entities: {entities}[/info]")
+
     def get_commands_completer(self):
         class CommandCompleter(Completer):
             def __init__(self, commands):
@@ -156,7 +174,10 @@ class Shell:
                 if corrected_command != command_to_run:
                     command_to_run = corrected_command
 
-            self.run_command(command_to_run)
+            if command_to_run.startswith("nlp"):
+                self.perform_nlp_task(command_to_run)
+            else:
+                self.run_command(command_to_run)
 
 
 if __name__ == "__main__":
