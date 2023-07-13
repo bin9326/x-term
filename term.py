@@ -160,7 +160,7 @@ class Shell:
 
         while True:
             self.cwd = os.getcwd()
-            prompt_text = f"[folder]{self.folder_icon.get_icon('home')} {self.cwd}[/folder] >>> "
+            prompt_text = f"{self.folder_icon.get_icon('home')} {self.cwd} >>> "
             command_to_run = session.prompt(prompt_text, bottom_toolbar='Press Ctrl+C to exit')
 
             if command_to_run.lower() == "exit":
