@@ -66,17 +66,20 @@ class Shell:
     def run_command(self, command):
         if command.startswith("cd"):
             self.change_directory(command)
+        elif command == "vim":
+            self.toggle_vim_mode()
+        elif command == "neofetch":
+            os.system("neofetch")
         else:
             try:
-                process = subprocess.Popen(
-                    command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True
-                )
+                process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
 
                 for line in process.stdout:
                     self.print_output_with_color(line)
 
             except subprocess.CalledProcessError as e:
                 print(f"[error]{e.output}[/error]")
+ 
 
     def print_output_with_color(self, line):
         if line.startswith("d"):
