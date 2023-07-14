@@ -1,0 +1,7 @@
+colorama==0.4.6
+emojis==0.7.0
+fuzzywuzzy==0.18.0
+prompt_toolkit==3.0.39
+pyfiglet==0.8.post1
+rich==13.4.2
+spacy==3.6.0
